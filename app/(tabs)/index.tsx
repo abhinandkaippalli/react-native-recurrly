@@ -1,24 +1,31 @@
-import "@/global.css"
+import "@/global.css";
 // import { Link } from "expo-router"
-import { Text, View, Image, FlatList } from "react-native"
-import { SafeAreaView as RNSaveAreaView } from "react-native-safe-area-context"
-import { styled } from 'nativewind'
-import images from "@/constants/images"
-import { HOME_BALANCE, HOME_SUBSCRIPTIONS, HOME_USER, UPCOMING_SUBSCRIPTIONS } from "@/constants/data"
-import { icons } from "../../constants/icons"
-import { formatCurrency } from "@/lib/utils"
-import dayjs from "dayjs"
-import ListHeading from "@/components/ListHeading"
-import UpcomingSubscriptionCard from "@/components/UpcomingSubscriptionCard"
-import SubscriptionCard from "@/components/SubscriptionCard"
-import { useState } from "react"
-const SafeAreaView = styled(RNSaveAreaView)
- 
+import ListHeading from "@/components/ListHeading";
+import SubscriptionCard from "@/components/SubscriptionCard";
+import UpcomingSubscriptionCard from "@/components/UpcomingSubscriptionCard";
+import {
+  HOME_BALANCE,
+  HOME_SUBSCRIPTIONS,
+  HOME_USER,
+  UPCOMING_SUBSCRIPTIONS,
+} from "@/constants/data";
+import images from "@/constants/images";
+import { formatCurrency } from "@/lib/utils";
+import dayjs from "dayjs";
+import { styled } from "nativewind";
+import { useState } from "react";
+import { FlatList, Image, Text, View } from "react-native";
+import { SafeAreaView as RNSaveAreaView } from "react-native-safe-area-context";
+import { icons } from "../../constants/icons";
+const SafeAreaView = styled(RNSaveAreaView);
+
 export default function App() {
-  const [expandedSubscriptionId, setExapndedSubscriptionId] = useState<string | null>(null)
+  const [expandedSubscriptionId, setExapndedSubscriptionId] = useState<
+    string | null
+  >(null);
   return (
     <SafeAreaView className="flex-1 bg-background p-5">
-      <FlatList 
+      <FlatList
         ListHeaderComponent={() => (
           <>
             <View className="home-header">
@@ -31,19 +38,29 @@ export default function App() {
             <View className="home-balance-card">
               <Text className="home-balance-label">Balance</Text>
               <View className="home-balance-row">
-                <Text className="home-balance-amount">{formatCurrency(HOME_BALANCE.amount)}</Text>
-                <Text className="home-balance-date">{dayjs(HOME_BALANCE.nextRenewalDate).format('MM/DD')}</Text>
+                <Text className="home-balance-amount">
+                  {formatCurrency(HOME_BALANCE.amount)}
+                </Text>
+                <Text className="home-balance-date">
+                  {dayjs(HOME_BALANCE.nextRenewalDate).format("MM/DD")}
+                </Text>
               </View>
             </View>
             <View className="mb-5">
               <ListHeading title="Upcoming" />
-              <FlatList 
-                data={UPCOMING_SUBSCRIPTIONS} 
-                renderItem={({ item }) => (<UpcomingSubscriptionCard { ...item } /> )}  
+              <FlatList
+                data={UPCOMING_SUBSCRIPTIONS}
+                renderItem={({ item }) => (
+                  <UpcomingSubscriptionCard {...item} />
+                )}
                 keyExtractor={(item) => item.id}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                ListEmptyComponent={<Text className="home-empty-state">No upcoming renewls yet.</Text>}
+                ListEmptyComponent={
+                  <Text className="home-empty-state">
+                    No upcoming renewals yet.
+                  </Text>
+                }
               />
             </View>
             <ListHeading title="All Subscriptions" />
@@ -52,16 +69,22 @@ export default function App() {
         data={HOME_SUBSCRIPTIONS}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <SubscriptionCard 
-            { ...item } 
+          <SubscriptionCard
+            {...item}
             expanded={expandedSubscriptionId === item.id}
-            onPress={() => setExapndedSubscriptionId((currentId) => (currentId === item.id ? null : item.id))}
+            onPress={() =>
+              setExapndedSubscriptionId((currentId) =>
+                currentId === item.id ? null : item.id,
+              )
+            }
           />
         )}
         extraData={expandedSubscriptionId}
-        ItemSeparatorComponent={() => <View className="h-4"/>}
+        ItemSeparatorComponent={() => <View className="h-4" />}
         showsVerticalScrollIndicator={false}
-        ListEmptyComponent={<Text className="home-empty-state">No subscription yet.</Text>}
+        ListEmptyComponent={
+          <Text className="home-empty-state">No subscription yet.</Text>
+        }
         contentContainerClassName="pb-30"
       />
     </SafeAreaView>
